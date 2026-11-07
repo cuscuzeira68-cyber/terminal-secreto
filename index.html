@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Terminal Confidencial</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #030403;
+            color: #55ff77;
+            font-family: Consolas, monospace;
+        }
+
+        .terminal {
+            width: 90%;
+            max-width: 440px;
+            padding: 35px 25px;
+            border: 1px solid #235c31;
+            background: #080b08;
+            box-shadow: 0 0 25px #0b2812;
+            text-align: center;
+        }
+
+        .status {
+            color: #68856c;
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+
+        h1 {
+            font-size: 23px;
+            letter-spacing: 3px;
+            margin: 25px 0;
+        }
+
+        p {
+            color: #9aab9b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            font-family: inherit;
+            border: 1px solid #28683a;
+            background: #030503;
+            color: #55ff77;
+            outline: none;
+        }
+
+        input {
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        input:focus {
+            border-color: #55ff77;
+        }
+
+        button {
+            cursor: pointer;
+            background: #102416;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            background: #1b3c23;
+        }
+
+        button:disabled {
+            cursor: default;
+            opacity: 0.5;
+        }
+
+        #mensagem {
+            margin-top: 22px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.7;
+        }
+
+        .sucesso {
+            color: #aaffbb;
+            border: 1px dashed #55ff77;
+            padding: 15px;
+        }
+
+        .erro {
+            color: #ff5555;
+        }
+
+        #musica {
+            display: none;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .rodape {
+            margin-top: 25px;
+            color: #405644;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="terminal">
+
+        <div class="status">
+            SISTEMA RESTRITO // 07
+        </div>
+
+        <h1>ACESSO CONFIDENCIAL</h1>
+
+        <p>
+            Este terminal contém informações restritas.<br>
+            Insira a chave de acesso para continuar.
+        </p>
+
+        <form id="formulario">
+
+            <input
+                id="senha"
+                type="password"
+                placeholder="DIGITE A SENHA"
+                autocomplete="off"
+                required
+            >
+
+            <button id="botao" type="submit">
+                AUTENTICAR
+            </button>
+
+        </form>
+
+        <div id="mensagem" role="status" aria-live="polite"></div>
+
+        <audio id="musica" controls preload="none">
+            Seu navegador não suporta áudio.
+        </audio>
+
+        <div class="rodape">
+            TERMINAL DE ACESSO // FIM DA TRANSMISSÃO
+        </div>
+
+    </main>
+
+    <script>
+        // =====================================
+        // CONFIGURAÇÕES DO SITE
+        // =====================================
+
+        const senhaCorreta = "PORTA-731";
+
+        const mensagemRecompensa =
+            "ACESSO CONCEDIDO.\n\n" +
+            "Você encontrou o arquivo secreto.\n\n" +
+            "RECOMPENSA DESBLOQUEADA.";
+
+        const arquivoMusica = "recompensa.mp3";
+
+        // =====================================
+        // ELEMENTOS DO SITE
+        // =====================================
+
+        const formulario = document.getElementById("formulario");
+        const campoSenha = document.getElementById("senha");
+        const botao = document.getElementById("botao");
+        const mensagem = document.getElementById("mensagem");
+        const musica = document.getElementById("musica");
+
+        // Carrega o arquivo de música
+        musica.src = arquivoMusica;
+
+        // =====================================
+        // VERIFICAÇÃO DA SENHA
+        // =====================================
+
+        formulario.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            if (campoSenha.value === senhaCorreta) {
+
+                mensagem.className = "sucesso";
+                mensagem.textContent = mensagemRecompensa;
+
+                // Mostra o player de música
+                musica.style.display = "block";
+
+                // Tenta tocar a música
+                musica.play().catch(function() {
+
+                    mensagem.textContent =
+                        mensagemRecompensa +
+                        "\n\nClique em reproduzir para ouvir a música.";
+
+                });
+
+                campoSenha.disabled = true;
+                botao.disabled = true;
+                botao.textContent = "ACESSO LIBERADO";
+
+            } else {
+
+                mensagem.className = "erro";
+                mensagem.textContent =
+                    "ACESSO NEGADO // CHAVE INVÁLIDA";
+
+                campoSenha.value = "";
+                campoSenha.focus();
+
+            }
+
+        });
+    </script>
+
+</body>
+</html>
